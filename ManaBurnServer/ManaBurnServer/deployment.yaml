@@ -1,3 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: manaburn-config
+data:
+  appsettings.json: |-
+    {
+      "Logging": {
+        "LogLevel": {
+          "Default": "Error",
+          "System": "Error",
+          "Microsoft": "Error"
+        }
+      }
+    }
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,9 +32,16 @@ spec:
       containers:
       - name: manaburn-server-container
         image: ${CICD_IMAGE}:v1.0.${CICD_EXECUTION_SEQUENCE}
+        volumeMounts:
+        - name: appconfig-volume
+          mountPath: /app/config
         env:
         - name: ASPNETCORE_ENVIRONMENT
-          value: "Development"
+          value: "Development"          
+      volumes:
+      - name: appconfig-volume
+        configMap:
+          name: manaburn-config
       imagePullSecrets:
       - name: pipeline-docker-registry
 ---
