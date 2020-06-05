@@ -3,7 +3,7 @@ stages:
   steps:
   - publishImageConfig:
       dockerfilePath: ./ManaBurnServer/ManaBurnServer/Dockerfile
-      buildContext: ./ManaBurnServer/ManaBurnServer
+      buildContext: ./ManaBurnServer
       tag: atriarch-manaburn-server:v1.0.${CICD_EXECUTION_SEQUENCE}
       registry: 127.0.0.1:34443
 - name: Deploy
