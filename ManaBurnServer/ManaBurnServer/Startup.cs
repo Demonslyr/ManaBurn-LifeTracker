@@ -1,9 +1,13 @@
+using System;
+using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ManaBurnServer.Hubs;
+using StackExchange.Redis;
+
 namespace ManaBurnServer
 {
     public class Startup
@@ -26,9 +30,34 @@ namespace ManaBurnServer
             }
             else
             {
-                services.AddSignalR().AddStackExchangeRedis("<your_Redis_connection_string>", options => {
-                    options.Configuration.ChannelPrefix = "ManaBurnSession";
+                services.AddSignalR().AddStackExchangeRedis(o =>
+                {
+                    o.ConnectionFactory = async writer =>
+                    {
+                        var config = new ConfigurationOptions
+                        {
+                            AbortOnConnectFail = false,
+                            ChannelPrefix = "ManaBurnSession"
+                        };
+                        config.EndPoints.Add(IPAddress.Loopback, 0);
+                        config.SetDefaultPorts();
+                        var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
+                        connection.ConnectionFailed += (_, e) =>
+                        {
+                            Console.WriteLine("Connection to Redis failed.");
+                        };
+
+                        if (!connection.IsConnected)
+                        {
+                            Console.WriteLine("Did not connect to Redis.");
+                        }
+
+                        return connection;
+                    };
                 });
+                /*"<your_Redis_connection_string>", options => {
+                options.Configuration.ChannelPrefix = "ManaBurnSession";
+            });*/
             }
         }
 
