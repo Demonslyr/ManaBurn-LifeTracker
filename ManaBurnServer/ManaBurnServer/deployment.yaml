@@ -35,13 +35,13 @@ spec:
         volumeMounts:
         - name: appconfig-volume
           mountPath: /app/config
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"          
       volumes:
       - name: appconfig-volume
         configMap:
           name: manaburn-config
-        env:
-        - name: ASPNETCORE_ENVIRONMENT
-          value: "Development"
       imagePullSecrets:
       - name: pipeline-docker-registry
 ---
