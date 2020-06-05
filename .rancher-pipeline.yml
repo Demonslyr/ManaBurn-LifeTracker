@@ -1,0 +1,21 @@
+stages:
+- name: Build
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./ManaBurnServer/ManaBurnServer/Dockerfile
+      buildContext: .
+      tag: atriarch-manaburn-server:v1.0.${CICD_EXECUTION_SEQUENCE}
+      registry: 127.0.0.1:34443
+- name: Deploy
+  steps:
+  - applyYamlConfig:
+      path: ./ManaBurnServer/ManaBurnServer/deployment.yaml
+timeout: 60
+notification:
+  recipients:
+  - recipient: dan@mail.atriarch.systems
+    notifier: c-xc9r9:n-g2gcc
+  condition:
+  - Success
+  - Failed
+  
