@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ManaBurnServer.Hubs;
-
 namespace ManaBurnServer
 {
     public class Startup
@@ -24,6 +23,12 @@ namespace ManaBurnServer
             if (Environment.IsDevelopment())
             {
                 services.AddSignalR();
+            }
+            else
+            {
+                services.AddSignalR().AddStackExchangeRedis("<your_Redis_connection_string>", options => {
+                    options.Configuration.ChannelPrefix = "ManaBurnSession";
+                });
             }
         }
 

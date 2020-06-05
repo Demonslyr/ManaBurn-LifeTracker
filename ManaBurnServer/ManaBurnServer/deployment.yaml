@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: manaburn-server-deployment
+  namespace: manaburn # The namespace the app will use
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: manaburn
+  template:
+    metadata:
+      labels:
+        app: manaburn
+    spec:
+      containers:
+      - name: manaburn-server-container
+        image: ${CICD_IMAGE}:v1.0.${CICD_EXECUTION_SEQUENCE}
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: "Development"
+      imagePullSecrets:
+      - name: pipeline-docker-registry
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: manaburn-server-service
+  namespace: manaburn # The namespace the app will use
+spec:
+  ports:
+  - name: http
+    targetPort: 80
+    port: 80
+  selector:
+    app: manaburn
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: manaburn-server-ingress
+  namespace: manaburn # The namespace the app will use  
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+  - host: manaburn.drinkpoint.me
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: manaburn-server-service
+          servicePort: http
