@@ -107,7 +107,7 @@ metadata:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: manaburn.drinkpoint.me
+  - host: manaburn.atriarch.systems
     http:
       paths:
       - path: /
