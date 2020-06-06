@@ -43,7 +43,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: atriarch-elasticsearch-config
-              key: url
+              key: url_internal
         - name: Manaburn_Atriarch_AuthUrl
           valueFrom:
             secretKeyRef:
