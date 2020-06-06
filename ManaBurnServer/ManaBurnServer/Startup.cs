@@ -40,7 +40,7 @@ namespace ManaBurnServer
                 .MinimumLevel.Information()
                 .WriteTo.Console()
                 .WriteTo.Elasticsearch(
-                    new ElasticsearchSinkOptions(new Uri(Configuration.GetConnectionString("Elasticsearch")))
+                    new ElasticsearchSinkOptions(new Uri(Configuration.GetSection("Atriarch_ElasticSearch").Value))
                     {
                         AutoRegisterTemplate = true,
                         RegisterTemplateFailure = RegisterTemplateRecovery.IndexAnyway,
@@ -99,16 +99,13 @@ namespace ManaBurnServer
                         return connection;
                     };
                 });
-                /*"<your_Redis_connection_string>", options => {
-                options.Configuration.ChannelPrefix = "ManaBurnSession";
-            });*/
             }
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication("Manaburn", options =>
                 {
-                    options.Authority = Configuration.GetConnectionString("AuthorityUrl");
-                    options.ApiName = "Manaburn";
-                    options.ApiSecret = "SecretHere";
+                    options.Authority = Configuration.GetSection("Atriarch_AuthUrl").Value;
+                    options.ApiName = Configuration.GetSection("Atriarch_Scope").Value;
+                    options.ApiSecret = Configuration.GetSection("Atriarch_ScopeSecret").Value;
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(10);
                 });
@@ -119,7 +116,7 @@ namespace ManaBurnServer
                 {
                     policy.AuthenticationSchemes.Add("Manaburn");
                     policy.RequireAuthenticatedUser();
-                    policy.RequireScope("Manaburn0001");
+                    policy.RequireScope(Configuration.GetSection("Atriarch_Scope").Value);
                 });
             });
             services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
