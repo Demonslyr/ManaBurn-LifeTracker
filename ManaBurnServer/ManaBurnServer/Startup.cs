@@ -29,7 +29,7 @@ namespace ManaBurnServer
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("/config/appsettings.json", optional: false, reloadOnChange: true)
                 //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: false, reloadOnChange: true)
-                .AddEnvironmentVariables();
+                .AddEnvironmentVariables(prefix: "Manaburn_");
 
             Configuration = builder.Build();
 
@@ -45,11 +45,7 @@ namespace ManaBurnServer
                         AutoRegisterTemplate = true,
                         RegisterTemplateFailure = RegisterTemplateRecovery.IndexAnyway,
                         DeadLetterIndexName = "deadletter-" + appEnvAndName,
-                        //FailureCallback = e => Console.WriteLine("Unable to submit event " + e.MessageTemplate),
-                        EmitEventFailure = //EmitEventFailureHandling.WriteToSelfLog |
-                            //EmitEventFailureHandling.WriteToFailureSink |
-                            EmitEventFailureHandling.ThrowException,
-                        //FailureSink = new FileSink($"./fail-{DateTime.UtcNow.ToString("yyyy-dd-M")}.txt", new JsonFormatter(), null, null),
+                        EmitEventFailure = EmitEventFailureHandling.ThrowException,
                         MinimumLogEventLevel = LogEventLevel.Information,
                         IndexFormat = appEnvAndName + "-{0:yyy.MM.dd}",
                         OverwriteTemplate = true,
