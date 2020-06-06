@@ -8,9 +8,9 @@ data:
     {
       "Logging": {
         "LogLevel": {
-          "Default": "Error",
-          "System": "Error",
-          "Microsoft": "Error"
+          "Default": "Information",
+          "System": "Information",
+          "Microsoft": "Information"
         }
       }
     }
