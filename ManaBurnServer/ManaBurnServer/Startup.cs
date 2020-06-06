@@ -27,7 +27,7 @@ namespace ManaBurnServer
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("/config/appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("/app/config/appsettings.json", optional: false, reloadOnChange: true)
                 //.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: false, reloadOnChange: true)
                 .AddEnvironmentVariables(prefix: "Manaburn_");
 
