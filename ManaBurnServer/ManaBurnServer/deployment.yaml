@@ -42,6 +42,37 @@ spec:
       containers:
       - name: manaburn-server-container
         image: ${CICD_IMAGE}:v1.0.${CICD_EXECUTION_SEQUENCE}
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            httpHeaders:
+            - name: Host
+              value: manaburn.atriarch.systems
+            path: /health/live
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 2
+          successThreshold: 1
+          timeoutSeconds: 2
+        name: manaburn-server-container
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            httpHeaders:
+            - name: Host
+              value: manaburn.atriarch.systems
+            path: /health
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 15
+          successThreshold: 2
+          timeoutSeconds: 2
         volumeMounts:
         - name: appconfig-volume
           mountPath: /app/config
@@ -68,11 +99,21 @@ spec:
             secretKeyRef:
               name: manaburn-client-config
               key: scopeSecret
-        - name: Manaburn_Atriarch_RedisConnection
+        - name: Manaburn_Atriarch_Redis_Host
           valueFrom:
             secretKeyRef:
               name: atriarch-redis-config
-              key: connectionString
+              key: host_internal
+        - name: Manaburn_Atriarch_Redis_Port
+          valueFrom:
+            secretKeyRef:
+              name: atriarch-redis-config
+              key: port
+        - name: Manaburn_Atriarch_Redis_Pass
+          valueFrom:
+            secretKeyRef:
+              name: atriarch-redis-config
+              key: pass
         - name: Manaburn_Atriarch_PsqlConnection
           valueFrom:
             secretKeyRef:
@@ -107,7 +148,7 @@ metadata:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: manaburn.drinkpoint.me
+  - host: manaburn.atriarch.systems
     http:
       paths:
       - path: /
