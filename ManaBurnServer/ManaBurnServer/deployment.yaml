@@ -12,6 +12,15 @@ data:
           "System": "Information",
           "Microsoft": "Information"
         }
+      },
+      "ElasticApm": {
+        "ServerUrls": "http://atriarch-apm-server.atriarch-logging.svc.cluster.local:8200",
+        "StackTraceLimit": 5,
+        "TransactionMaxSpans": 5,
+        "SanitizeFieldNames": "authorization,password,secret,passwd,token,api_key,access_token,sessionid",
+        "TransactionSampleRate": 1.0,
+        "CaptureBody": "all",
+        "CaptureBodyContentTypes": "application/x-www-form-urlencoded*, text/*, application/json*, application/xml*"
       }
     }
 ---
