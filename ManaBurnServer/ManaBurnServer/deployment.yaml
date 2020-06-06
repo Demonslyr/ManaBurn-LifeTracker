@@ -99,11 +99,21 @@ spec:
             secretKeyRef:
               name: manaburn-client-config
               key: scopeSecret
-        - name: Manaburn_Atriarch_RedisConnection
+        - name: Manaburn_Atriarch_Redis_Host
           valueFrom:
             secretKeyRef:
               name: atriarch-redis-config
-              key: connectionString
+              key: host_internal
+        - name: Manaburn_Atriarch_Redis_Port
+          valueFrom:
+            secretKeyRef:
+              name: atriarch-redis-config
+              key: port
+        - name: Manaburn_Atriarch_Redis_Pass
+          valueFrom:
+            secretKeyRef:
+              name: atriarch-redis-config
+              key: pass
         - name: Manaburn_Atriarch_PsqlConnection
           valueFrom:
             secretKeyRef:
