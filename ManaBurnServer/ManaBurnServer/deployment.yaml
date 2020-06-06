@@ -8,9 +8,9 @@ data:
     {
       "Logging": {
         "LogLevel": {
-          "Default": "Error",
-          "System": "Error",
-          "Microsoft": "Error"
+          "Default": "Information",
+          "System": "Information",
+          "Microsoft": "Information"
         }
       }
     }
@@ -38,7 +38,37 @@ spec:
           mountPath: /app/config
         env:
         - name: ASPNETCORE_ENVIRONMENT
-          value: "Development"          
+          value: "Development"
+        - name: Manaburn_Atriarch_ElasticSearch
+          valueFrom:
+            secretKeyRef:
+              name: atriarch-elasticsearch-config
+              key: url
+        - name: Manaburn_Atriarch_AuthUrl
+          valueFrom:
+            secretKeyRef:
+              name: manaburn-client-config
+              key: authorityUrl
+        - name: Manaburn_Atriarch_Scope
+          valueFrom:
+            secretKeyRef:
+              name: manaburn-client-config
+              key: scope
+        - name: Manaburn_Atriarch_ScopeSecret
+          valueFrom:
+            secretKeyRef:
+              name: manaburn-client-config
+              key: scopeSecret
+        - name: Manaburn_Atriarch_RedisConnection
+          valueFrom:
+            secretKeyRef:
+              name: atriarch-redis-config
+              key: connectionString
+        - name: Manaburn_Atriarch_PsqlConnection
+          valueFrom:
+            secretKeyRef:
+              name: manaburn-psql-config
+              key: connectionString
       volumes:
       - name: appconfig-volume
         configMap:
