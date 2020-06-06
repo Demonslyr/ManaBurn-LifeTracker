@@ -56,6 +56,10 @@ spec:
           successThreshold: 1
           timeoutSeconds: 2
         name: manaburn-server-container
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
         readinessProbe:
           failureThreshold: 3
           httpGet:
