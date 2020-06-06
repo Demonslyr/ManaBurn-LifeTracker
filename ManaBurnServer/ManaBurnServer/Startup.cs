@@ -97,7 +97,7 @@ namespace ManaBurnServer
                         var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
                         connection.ConnectionFailed += (_, e) =>
                         {
-                            Log.Information("Connection to Redis failed.");
+                            Log.Error(e.Exception,"Connection to Redis failed.");
                         };
 
                         if (!connection.IsConnected)
