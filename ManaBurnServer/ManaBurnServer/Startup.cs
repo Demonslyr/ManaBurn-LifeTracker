@@ -74,8 +74,10 @@ namespace ManaBurnServer
             }
             else
             {
+                Log.Information(Configuration.GetSection("Atriarch_Redis_Host").Value);
                 services.AddSignalR().AddStackExchangeRedis(o =>
                 {
+
                     o.ConnectionFactory = async writer =>
                     {
                         var config = new ConfigurationOptions
@@ -84,7 +86,8 @@ namespace ManaBurnServer
                             ChannelPrefix = "ManaBurnSession",
                             Password = Configuration.GetSection("Atriarch_Redis_Pass").Value,
                             Ssl = true,
-                            ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}"
+                            ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}",
+                            ConnectRetry = 5
                         };
                         config.EndPoints.Add(
                             Configuration.GetSection("Atriarch_Redis_Host").Value, 
@@ -94,12 +97,12 @@ namespace ManaBurnServer
                         var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
                         connection.ConnectionFailed += (_, e) =>
                         {
-                            Console.WriteLine("Connection to Redis failed.");
+                            Log.Information("Connection to Redis failed.");
                         };
 
                         if (!connection.IsConnected)
                         {
-                            Console.WriteLine("Did not connect to Redis.");
+                            Log.Information("Did not connect to Redis.");
                         }
 
                         return connection;
@@ -117,7 +120,6 @@ namespace ManaBurnServer
                     options.EnableCaching = true;
                     options.CacheDuration = TimeSpan.FromMinutes(10);
                 });
-
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("ManaburnPolicy", policy =>
