@@ -42,6 +42,33 @@ spec:
       containers:
       - name: manaburn-server-container
         image: ${CICD_IMAGE}:v1.0.${CICD_EXECUTION_SEQUENCE}
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            httpHeaders:
+            - name: Host
+              value: manaburn.atriarch.systems
+            path: /health/live
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 2
+          successThreshold: 1
+          timeoutSeconds: 2
+        name: manaburn-server-container
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            httpHeaders:
+            - name: Host
+              value: manaburn.atriarch.systems
+            path: /health
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 20
+          periodSeconds: 15
+          successThreshold: 2
+          timeoutSeconds: 2
         volumeMounts:
         - name: appconfig-volume
           mountPath: /app/config
