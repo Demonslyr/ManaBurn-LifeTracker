@@ -68,7 +68,7 @@ namespace ManaBurnServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            if (Environment.IsDevelopment())
+            if (Environment.EnvironmentName == "Local")
             {
                 services.AddSignalR();
             }
@@ -147,7 +147,7 @@ namespace ManaBurnServer
                 ForwardLimit = 2,
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
-            if (Environment.IsDevelopment())
+            if (Environment.IsDevelopment() || Environment.EnvironmentName == "Local")
             {
                 app.UseDeveloperExceptionPage();
             }
