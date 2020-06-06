@@ -81,9 +81,15 @@ namespace ManaBurnServer
                         var config = new ConfigurationOptions
                         {
                             AbortOnConnectFail = false,
-                            ChannelPrefix = "ManaBurnSession"
+                            ChannelPrefix = "ManaBurnSession",
+                            Password = Configuration.GetSection("Atriarch_Redis_Pass").Value,
+                            Ssl = true,
+                            ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}"
                         };
-                        config.EndPoints.Add(IPAddress.Loopback, 0);
+                        config.EndPoints.Add(
+                            Configuration.GetSection("Atriarch_Redis_Host").Value, 
+                            Configuration.GetSection("Atriarch_Redis_Port").Get<int>()
+                            );
                         config.SetDefaultPorts();
                         var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
                         connection.ConnectionFailed += (_, e) =>
