@@ -100,6 +100,8 @@ namespace ManaBurnServer
                     };
                 });
             }
+
+            services.AddHealthChecks();
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication("Manaburn", options =>
                 {
