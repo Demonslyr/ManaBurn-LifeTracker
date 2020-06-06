@@ -49,16 +49,16 @@ spec:
             secretKeyRef:
               name: manaburn-client-config
               key: authorityUrl
-        - name: Manaburn_Atriarch_ClientId
+        - name: Manaburn_Atriarch_Scope
           valueFrom:
             secretKeyRef:
               name: manaburn-client-config
-              key: clientId
-        - name: Manaburn_Atriarch_ClientSecret
+              key: scope
+        - name: Manaburn_Atriarch_ScopeSecret
           valueFrom:
             secretKeyRef:
               name: manaburn-client-config
-              key: secret
+              key: scopeSecret
         - name: Manaburn_Atriarch_RedisConnection
           valueFrom:
             secretKeyRef:
