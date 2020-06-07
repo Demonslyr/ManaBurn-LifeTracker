@@ -68,44 +68,37 @@ namespace ManaBurnServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            if (Environment.EnvironmentName == "Local")
+            Log.Information(Configuration.GetSection("Atriarch_Redis_Host").Value);
+            int redisPort = Configuration.GetSection("Atriarch_Redis_Port").Get<int>();
+            Log.Information($"Redis Port: {redisPort}");
+            services.AddSignalR().AddStackExchangeRedis(
+                $"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()}",
+                o =>
             {
-                services.AddSignalR();
-            }
-            else
-            {
-                Log.Information(Configuration.GetSection("Atriarch_Redis_Host").Value);
-                int redisPort = Configuration.GetSection("Atriarch_Redis_Port").Get<int>();
-                Log.Information($"Redis Port: {redisPort}");
-                services.AddSignalR().AddStackExchangeRedis(
-                    $"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()}",
-                    o =>
+
+                o.ConnectionFactory = async writer =>
                 {
-
-                    o.ConnectionFactory = async writer =>
+                    var config = new ConfigurationOptions
                     {
-                        var config = new ConfigurationOptions
-                        {
-                            //AbortOnConnectFail = false,
-                            ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}",
-                        };
-                        var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
-                        connection.ConnectionFailed += (_, e) =>
-                        {
-                            Log.Error(e.Exception,"Connection to Redis failed.");
-                        };
-
-                        if (!connection.IsConnected)
-                        {
-                            Log.Information("Did not connect to Redis.");
-                        }
-                        
-                        Log.Information($"IsConnected: {connection.IsConnected}\nClientName: {connection.ClientName}\nConfiguration\n{connection.Configuration}");
-
-                        return connection;
+                        AbortOnConnectFail = true,
+                        ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}",
                     };
-                });
-            }
+                    var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
+                    connection.ConnectionFailed += (_, e) =>
+                    {
+                        Log.Error(e.Exception,"Connection to Redis failed.");
+                    };
+
+                    if (!connection.IsConnected)
+                    {
+                        Log.Information("Did not connect to Redis.");
+                    }
+                    
+                    Log.Information($"IsConnected: {connection.IsConnected}\nClientName: {connection.ClientName}\nConfiguration\n{connection.Configuration}");
+
+                    return connection;
+                };
+            });
 
             services.AddHealthChecks();
             services.AddAuthentication("Bearer")
