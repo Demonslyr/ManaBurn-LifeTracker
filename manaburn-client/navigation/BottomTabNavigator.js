@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import SignalrScreen from '../screens/SignalrTestPage';
+import SignalrTestPage from '../screens/SignalrTestPage';
 import LinksScreen from '../screens/LinksScreen';
 
 const BottomTab = createBottomTabNavigator();
@@ -33,9 +33,9 @@ export default function BottomTabNavigator({ navigation, route }) {
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
         }}
       />
-            <BottomTab.Screen
+      <BottomTab.Screen
         name="Signalr"
-        component={SignalrScreen}
+        component={SignalrTestPage}
         options={{
           title: 'SignalrScreen',
           tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
