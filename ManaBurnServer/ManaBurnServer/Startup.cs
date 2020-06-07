@@ -144,7 +144,6 @@ namespace ManaBurnServer
             {
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseRouting();
