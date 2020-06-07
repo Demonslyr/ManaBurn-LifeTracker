@@ -75,6 +75,7 @@ namespace ManaBurnServer
                 $"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()}",
                 o =>
                 {
+                    o.Configuration.ChannelPrefix = "manaburnServer";
                     o.ConnectionFactory = async writer =>
                     {
                         var config = new ConfigurationOptions
