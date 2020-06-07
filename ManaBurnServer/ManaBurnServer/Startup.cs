@@ -93,13 +93,10 @@ namespace ManaBurnServer
                             Configuration.GetSection("Atriarch_Redis_Host").Value, 
                             Configuration.GetSection("Atriarch_Redis_Port").Get<int>()
                             );
-                        config.SetDefaultPorts();
                         var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
                         connection.ConnectionFailed += (_, e) =>
                         {
-                            Console.WriteLine(e.Exception.Message);
                             Log.Error(e.Exception,"Connection to Redis failed.");
-                            throw (e.Exception);
                         };
 
                         if (!connection.IsConnected)
