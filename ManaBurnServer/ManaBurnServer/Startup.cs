@@ -75,6 +75,8 @@ namespace ManaBurnServer
             else
             {
                 Log.Information(Configuration.GetSection("Atriarch_Redis_Host").Value);
+                int redisPort = Configuration.GetSection("Atriarch_Redis_Port").Get<int>();
+                Log.Information($"Redis Port: {redisPort}");
                 services.AddSignalR().AddStackExchangeRedis(o =>
                 {
 
@@ -84,8 +86,6 @@ namespace ManaBurnServer
                         {
                             AbortOnConnectFail = false,
                             ChannelPrefix = "ManaBurnSession",
-                            Password = Configuration.GetSection("Atriarch_Redis_Pass").Value,
-                            Ssl = true,
                             ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}",
                             ConnectRetry = 5
                         };
