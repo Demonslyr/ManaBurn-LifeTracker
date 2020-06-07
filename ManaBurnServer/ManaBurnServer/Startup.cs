@@ -99,10 +99,8 @@ namespace ManaBurnServer
                         {
                             Log.Information("Did not connect to Redis.");
                         }
-                        else
-                        {
-                            Log.Information($"IsConnected: {connection.IsConnected}\nClientName: {connection.ClientName}\nConfiguration\n{connection.Configuration}");
-                        }
+                        
+                        Log.Information($"IsConnected: {connection.IsConnected}\nClientName: {connection.ClientName}\nConfiguration\n{connection.Configuration}");
 
                         return connection;
                     };
