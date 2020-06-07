@@ -77,7 +77,9 @@ namespace ManaBurnServer
                 Log.Information(Configuration.GetSection("Atriarch_Redis_Host").Value);
                 int redisPort = Configuration.GetSection("Atriarch_Redis_Port").Get<int>();
                 Log.Information($"Redis Port: {redisPort}");
-                services.AddSignalR().AddStackExchangeRedis(o =>
+                services.AddSignalR().AddStackExchangeRedis(
+                    $"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()}",
+                    o =>
                 {
 
                     o.ConnectionFactory = async writer =>
@@ -85,14 +87,8 @@ namespace ManaBurnServer
                         var config = new ConfigurationOptions
                         {
                             AbortOnConnectFail = false,
-                            ChannelPrefix = "ManaBurnSession",
                             ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}",
-                            ConnectRetry = 5
                         };
-                        config.EndPoints.Add(
-                            Configuration.GetSection("Atriarch_Redis_Host").Value, 
-                            Configuration.GetSection("Atriarch_Redis_Port").Get<int>()
-                            );
                         var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
                         connection.ConnectionFailed += (_, e) =>
                         {
