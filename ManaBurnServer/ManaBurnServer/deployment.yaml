@@ -109,11 +109,6 @@ spec:
             secretKeyRef:
               name: atriarch-redis-config
               key: port
-        - name: Manaburn_Atriarch_Redis_Pass
-          valueFrom:
-            secretKeyRef:
-              name: atriarch-redis-config
-              key: pass
         - name: Manaburn_Atriarch_PsqlConnection
           valueFrom:
             secretKeyRef:
