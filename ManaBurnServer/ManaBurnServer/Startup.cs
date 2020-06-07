@@ -86,7 +86,7 @@ namespace ManaBurnServer
                     {
                         var config = new ConfigurationOptions
                         {
-                            AbortOnConnectFail = false,
+                            //AbortOnConnectFail = false,
                             ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}",
                         };
                         var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
