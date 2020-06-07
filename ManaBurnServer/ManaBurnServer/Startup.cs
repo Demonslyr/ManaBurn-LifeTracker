@@ -124,7 +124,8 @@ namespace ManaBurnServer
                 builder
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowAnyOrigin();
+                    .AllowCredentials()
+                    .WithOrigins("http://manaburn.atriarch.systems", "https://manaburn.atriarch.systems");
             }));
         }
 
