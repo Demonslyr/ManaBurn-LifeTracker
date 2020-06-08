@@ -128,7 +128,7 @@ namespace ManaBurnServer
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()
-                    .WithOrigins("http://manaburn.atriarch.systems", "https://manaburn.atriarch.systems");
+                    .WithOrigins("http://manaburn.atriarch.systems", "https://manaburn.atriarch.systems", "ws://manaburn.atriarch.systems", "wss://manaburn.atriarch.systems");
             }));
         }
 
