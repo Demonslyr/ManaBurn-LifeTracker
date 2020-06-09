@@ -4,35 +4,57 @@ import { ScrollView } from 'react-native-gesture-handler';
 import * as SignalR from '@microsoft/signalr';
 
 export default function SignalrTestPage() {
-  let connection = new SignalR.HubConnectionBuilder()
-    .withUrl("http://manaburn.atriarch.systems/GameHub")
-    .build();
-
-  connection.on("send", data => {
-    console.log(data);
-  });
+  const [connection, setConnection] = React.useState();
   React.useEffect(() => {
-    connection.start()
-    .then(() => connection.invoke("AddToGroup", "TestSession"));
-    connection.start()
-    .then(() => connection.invoke("SendMessage", "Tobes","TestSession","Hello"));
-    connection.start()
-    .then(() => connection.invoke("RemoveFromGroup", "TestSession"));
+    let newConnection = new SignalR.HubConnectionBuilder()
+    .configureLogging(SignalR.LogLevel.Debug)
+    .withUrl("http://manaburn.atriarch.systems/ManaBurn")
+    .build();
+    
+    //alert(Object.keys(newConnection).join(","));
+    // Warning : No Client method with the name 'Send' found current bug, also fix redis
+    newConnection.on("ReceiveMessage", (arg1, arg2) => {
+      alert(`arg1: ${arg1}, arg2: ${arg2}`);
+    });
+
+    newConnection.start()
+      .then(() => newConnection.invoke("AddToGroup", "TestSession")).catch(reason => alert(reason))
+      .then(() => newConnection.invoke("SendMessage", "Tobes","TestSession","Hello")).catch(reason => alert(reason))
+      .then(() => newConnection.invoke("RemoveFromGroup", "TestSession"))
+      //w; 
+
+    //setConnection(newConnection); do not uncomment, causes infinite loop. Put elsewhere
   });
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <View>Hello</View>
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={onPress.bind(connection)}
+          >
+            <Text>Press Here</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
       <View style={styles.tabBarInfoContainer}>
-        Footer
+      <Text>Footer</Text>
       </View>
     </View>
   );
 }
 
-HomeScreen.navigationOptions = {
+function onPress (connection){
+  alert("pressed");
+  //connectionnewConnection.invoke("AddToGroup", "TestSession");
+  // connection.start()
+  //   .then(() => connection.invoke("AddToGroup", "TestSession"))
+  //   .then(() => connection.invoke("SendMessage", "Tobes","TestSession","Hello"))
+  //   .then(() => connection.invoke("RemoveFromGroup", "TestSession")); 
+}
+
+SignalrTestPage.navigationOptions = {
   header: null,
 };
 
@@ -40,6 +62,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  button: {
+    alignItems: "center",
+    backgroundColor: "#DDDDDD",
+    padding: 10
   },
   developmentModeText: {
     marginBottom: 20,
