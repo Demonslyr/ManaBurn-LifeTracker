@@ -74,7 +74,7 @@ namespace ManaBurnServer
             services.AddSignalR(o => {
                     o.EnableDetailedErrors = true;
                 })
-                .AddStackExchangeRedis(
+                /*.AddStackExchangeRedis(
                 $"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()}",
                 o =>
                 {
@@ -101,7 +101,7 @@ namespace ManaBurnServer
 
                         return connection;
                     };
-                });
+                });*/
 
             services.AddHealthChecks();
             services.AddAuthentication("Bearer")
