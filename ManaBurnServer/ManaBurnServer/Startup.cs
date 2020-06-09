@@ -71,7 +71,11 @@ namespace ManaBurnServer
             Log.Information(Configuration.GetSection("Atriarch_Redis_Host").Value);
             int redisPort = Configuration.GetSection("Atriarch_Redis_Port").Get<int>();
             Log.Information($"Redis Port: {redisPort}");
-            services.AddSignalR().AddStackExchangeRedis(
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
+                /*.AddStackExchangeRedis(
                 $"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()}",
                 o =>
                 {
@@ -98,7 +102,7 @@ namespace ManaBurnServer
 
                         return connection;
                     };
-                });
+                });*/
 
             services.AddHealthChecks();
             services.AddAuthentication("Bearer")
@@ -124,7 +128,8 @@ namespace ManaBurnServer
                 builder
                     .AllowAnyMethod()
                     .AllowAnyHeader()
-                    .AllowAnyOrigin();
+                    .AllowCredentials()
+                    .WithOrigins("http://manaburn.atriarch.systems", "https://manaburn.atriarch.systems", "ws://manaburn.atriarch.systems", "wss://manaburn.atriarch.systems");
             }));
         }
 

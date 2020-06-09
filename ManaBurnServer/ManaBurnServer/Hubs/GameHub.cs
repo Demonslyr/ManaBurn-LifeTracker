@@ -14,14 +14,14 @@ namespace ManaBurnServer.Hubs
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, gameSession);
 
-            await Clients.Group(gameSession).SendAsync("Send", $"{Context.ConnectionId} has joined the group {gameSession}.");
+            await Clients.Group(gameSession).SendAsync("ReceiveMessage", $"{Context.ConnectionId} has joined the group {gameSession}.");
         }
 
         public async Task RemoveFromGroup(string gameSession)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameSession);
 
-            await Clients.Group(gameSession).SendAsync("Send", $"{Context.ConnectionId} has left the group {gameSession}.");
+            await Clients.Group(gameSession).SendAsync("ReceiveMessage", $"{Context.ConnectionId} has left the group {gameSession}.");
         }
     }
 }

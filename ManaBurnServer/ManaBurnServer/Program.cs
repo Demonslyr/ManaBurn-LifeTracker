@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+
 
 namespace ManaBurnServer
 {
@@ -15,6 +17,7 @@ namespace ManaBurnServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    webBuilder.UseSerilog();
                 });
     }
 }
