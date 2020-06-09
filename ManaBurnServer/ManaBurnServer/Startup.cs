@@ -71,9 +71,10 @@ namespace ManaBurnServer
             Log.Information(Configuration.GetSection("Atriarch_Redis_Host").Value);
             int redisPort = Configuration.GetSection("Atriarch_Redis_Port").Get<int>();
             Log.Information($"Redis Port: {redisPort}");
-            services.AddSignalR(o => {
-                    o.EnableDetailedErrors = true;
-                })
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
                 /*.AddStackExchangeRedis(
                 $"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()}",
                 o =>
