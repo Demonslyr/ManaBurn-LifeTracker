@@ -8,7 +8,7 @@ namespace ManaBurnServer.Hubs
         public async Task SendMessage(string user,string gameSession, string action)
         {
             // Send message to clients in the session, do some checks to make sure the client belongs to the session they passed before sending
-            await Clients.Group(gameSession).SendAsync("ReceiveMessage", user, action);
+            await Clients.OthersInGroup(gameSession).SendAsync("ReceiveMessage", user, $"{user} performed {action}!");
         }
         public async Task AddToGroup(string gameSession)
         {
