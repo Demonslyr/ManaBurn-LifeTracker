@@ -14,7 +14,9 @@ namespace ManaBurnServer.Hubs
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, gameSession);
 
-            await Clients.Group(gameSession).SendAsync("ReceiveMessage", $"{Context.ConnectionId} has joined the group {gameSession}.");
+            await Clients.OthersInGroup(gameSession).SendAsync("ReceiveMessage", $"{Context.ConnectionId} has joined the group {gameSession}.");
+            await Clients.Caller.SendAsync("ReceiveMessage", $"You have joined the group {gameSession}.");
+
         }
 
         public async Task RemoveFromGroup(string gameSession)
