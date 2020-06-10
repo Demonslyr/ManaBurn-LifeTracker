@@ -16,8 +16,13 @@ using System.Linq;
 using System.Net;
 using System.Text.Json;
 using Elastic.Apm.AspNetCore;
+using ManaBurnServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace ManaBurnServer
 {
@@ -68,6 +73,10 @@ namespace ManaBurnServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IConfigureOptions<JsonOptions>, JsonSerializationOptions>();
+            services.AddSingleton<IConfigureOptions<SwaggerUIOptions>, ManaburnSwaggerUIOptions>();
+            services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ManaburnSwaggerGenOptions>();
+            services.AddSwaggerGen();
             services.AddSignalR(o => {
                 o.EnableDetailedErrors = true;
             })
@@ -158,6 +167,8 @@ namespace ManaBurnServer
                 {
                     Predicate = (_) => false
                 });
+                app.UseSwagger();
+                app.UseSwaggerUI();
             });
         }
     }
