@@ -20,8 +20,8 @@ namespace ManaBurnServer.Hubs
         public async Task RemoveFromGroup(string gameSession)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameSession);
-
-            await Clients.Group(gameSession).SendAsync("ReceiveMessage", $"{Context.ConnectionId} has left the group {gameSession}.");
+            await Clients.OthersInGroup(gameSession).SendAsync("ReceiveMessage", $"{Context.ConnectionId} has left the group {gameSession}.");
+            await Clients.Caller.SendAsync("ReceiveMessage", $"You have left the group {gameSession}.");
         }
     }
 }
