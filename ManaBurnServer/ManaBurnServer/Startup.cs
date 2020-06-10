@@ -70,46 +70,16 @@ namespace ManaBurnServer
             services.AddControllers();
             services.AddSignalR(o => {
                 o.EnableDetailedErrors = true;
-            }).AddStackExchangeRedis(
-                $"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()},password={Configuration.GetSection("Atriarch_Redis_Pass").Value}",
-                o =>
-                {
-                    o.Configuration.AbortOnConnectFail = false;
-                });
-
-            /*services.AddSignalR(o =>
-            {
-                o.EnableDetailedErrors = true;
             })
             .AddStackExchangeRedis(o =>
             {
-                //o.Configuration.ChannelPrefix = "manaburnServer";
-                o.ConnectionFactory = async writer =>
-                {
-                    var config = new ConfigurationOptions
-                    {
-                        EndPoints = { $"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()}" },
-                        Password = Configuration.GetSection("Atriarch_Redis_Pass").Value,
-                        //AbortOnConnectFail = false,
-                        ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}",
-                    };
-                    var connection = await ConnectionMultiplexer.ConnectAsync(config, writer);
-                    connection.ConnectionFailed += (_, e) =>
-                    {
-                        Log.Error(e.Exception,"Connection to Redis failed.");
-                    };
-
-                    if (!connection.IsConnected)
-                    {
-                        Log.Information("Did not connect to Redis.");
-                    }
-                    
-                    Log.Information($"IsConnected: {connection.IsConnected}\nClientName: {connection.ClientName}\nConfiguration\n{connection.Configuration}");
-
-                    return connection;
-                };
-            });*/
-
+                o.Configuration.AbortOnConnectFail = false;
+                o.Configuration.EndPoints.Add(
+                    Configuration.GetSection("Atriarch_Redis_Host").Value, 
+                    Configuration.GetSection("Atriarch_Redis_Port").Get<int>()
+                    );
+                o.Configuration.Password = Configuration.GetSection("Atriarch_Redis_Pass").Value;
+            });
             services.AddHealthChecks();
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication("Manaburn", options =>
