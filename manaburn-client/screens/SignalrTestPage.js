@@ -4,39 +4,61 @@ import { ScrollView } from 'react-native-gesture-handler';
 import * as SignalR from '@microsoft/signalr';
 
 export default function SignalrTestPage() {
-  const [connection, setConnection] = React.useState();
-  React.useEffect(() => {
-    let newConnection = new SignalR.HubConnectionBuilder()
-    .configureLogging(SignalR.LogLevel.Debug)
-    .withUrl("http://manaburn.atriarch.systems/ManaBurn")
-    .build();
-    
-    //alert(Object.keys(newConnection).join(","));
-    // Warning : No Client method with the name 'Send' found current bug, also fix redis
-    newConnection.on("ReceiveMessage", (arg1, arg2) => {
-      alert(`arg1: ${arg1}, arg2: ${arg2}`);
-    });
-
-    newConnection.start()
-      .then(() => newConnection.invoke("AddToGroup", "TestSession")).catch(reason => alert(reason))
-      .then(() => newConnection.invoke("SendMessage", "Tobes","TestSession","Hello")).catch(reason => alert(reason))
-      .then(() => newConnection.invoke("RemoveFromGroup", "TestSession"))
-      //w; 
-
-    //setConnection(newConnection); do not uncomment, causes infinite loop. Put elsewhere
-  });
+  const [connection, setConnection] = React.useState(null);
+  const CONNECT = React.useCallback(() => {
+    if (connection === null){
+      let newConnection = new SignalR.HubConnectionBuilder()
+      .configureLogging(SignalR.LogLevel.Debug)
+      .withUrl("http://manaburn.atriarch.systems/ManaBurn")
+      .build();
+      newConnection.on("ReceiveMessage", (arg1, arg2) => {
+        alert(`arg1: ${arg1}, arg2: ${arg2}`);
+      });
+      //alert(Object.keys(newConnection).join(","));
+      alert(`Conn St: ${newConnection.connectionState},\nConn Strt: ${newConnection.connectionStarted}`);
+      setConnection(newConnection);
+    }
+  },
+  [connection, setConnection]);
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={CONNECT}
+          >
+            <Text>Connect</Text>
+          </TouchableOpacity>
+        </View>
         <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={onPress.bind(connection)}
+            onPress={() => {connection.start()
+              .then(() => connection.invoke("AddToGroup", "TestSession")).catch(reason => alert(reason))}}
           >
-            <Text>Press Here</Text>
+            <Text>Add Group</Text>
           </TouchableOpacity>
         </View>
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {connection.start()
+              .then(() => connection.invoke("SendMessage", "Tobes","TestSession","Hello")).catch(reason => alert(reason))}}
+          >
+            <Text>Send Message</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => {connection.start()
+              .then(() => connection.invoke("RemoveFromGroup", "TestSession")).catch(reason => alert(reason))}}
+          >
+            <Text>Remove Group</Text>
+          </TouchableOpacity>
+        </View>                
       </ScrollView>
       <View style={styles.tabBarInfoContainer}>
       <Text>Footer</Text>
