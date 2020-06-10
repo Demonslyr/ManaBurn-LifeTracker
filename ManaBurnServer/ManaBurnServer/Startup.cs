@@ -68,7 +68,9 @@ namespace ManaBurnServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddSignalR(o =>
+            services.AddSignalR().AddStackExchangeRedis($"{Configuration.GetSection("Atriarch_Redis_Host").Value}:{Configuration.GetSection("Atriarch_Redis_Port").Get<int>()},password={ Configuration.GetSection("Atriarch_Redis_Pass").Value}", o => o.Configuration.AbortOnConnectFail = false);
+
+            /*services.AddSignalR(o =>
             {
                 o.EnableDetailedErrors = true;
             })
@@ -99,7 +101,7 @@ namespace ManaBurnServer
 
                     return connection;
                 };
-            });
+            });*/
 
             services.AddHealthChecks();
             services.AddAuthentication("Bearer")
