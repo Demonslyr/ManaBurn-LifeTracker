@@ -6,7 +6,7 @@ import * as SignalR from '@microsoft/signalr';
 export default function SignalrTestPage() {
   const [connection, setConnection] = React.useState(null);
   const CONNECT = React.useCallback(() => {
-    if (connection === null){
+    if (connection == null || connection.connectionState === 'Disconnected'){
       let newConnection = new SignalR.HubConnectionBuilder()
       .configureLogging(SignalR.LogLevel.Debug)
       .withUrl("http://manaburn.atriarch.systems/ManaBurn")
@@ -17,6 +17,9 @@ export default function SignalrTestPage() {
       //alert(Object.keys(newConnection).join(","));
       alert(`Conn St: ${newConnection.connectionState},\nConn Strt: ${newConnection.connectionStarted}`);
       setConnection(newConnection);
+    } else {
+      //alert(`Conn St: ${connection.connectionState},\nConn Strt: ${connection.connectionStarted}`);
+      alert(Object.keys(connection).join(","));
     }
   },
   [connection, setConnection]);
@@ -35,8 +38,16 @@ export default function SignalrTestPage() {
         <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {connection.start()
-              .then(() => connection.invoke("AddToGroup", "TestSession")).catch(reason => alert(reason))}}
+            onPress={async () => {
+              try{
+                if(!connection.connectionStarted){
+                  await connection.start();
+                }
+                  await connection.invoke("AddToGroup", "TestSession");
+                } catch (e) {
+                  alert(e)
+                }
+            }}
           >
             <Text>Add Group</Text>
           </TouchableOpacity>
@@ -44,8 +55,16 @@ export default function SignalrTestPage() {
         <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {connection.start()
-              .then(() => connection.invoke("SendMessage", "Tobes","TestSession","Hello")).catch(reason => alert(reason))}}
+            onPress={async () => {
+              try{
+                if(!connection.connectionStarted){
+                  await connection.start();
+                }
+                  await connection.invoke("SendMessage", "Tobes","TestSession","Hello");
+                } catch (e) {
+                  alert(e)
+                }
+            }}
           >
             <Text>Send Message</Text>
           </TouchableOpacity>
@@ -53,12 +72,36 @@ export default function SignalrTestPage() {
         <View>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {connection.start()
-              .then(() => connection.invoke("RemoveFromGroup", "TestSession")).catch(reason => alert(reason))}}
+            onPress={async () => {
+              try{
+                if(!connection.connectionStarted){
+                  await connection.start();
+                }
+                await connection.invoke("RemoveFromGroup", "TestSession");
+                } catch (e) {
+                  alert(e)
+                }
+            }}
           >
             <Text>Remove Group</Text>
           </TouchableOpacity>
-        </View>                
+        </View>  
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={async () => {
+              try{
+                if(connection.connectionStarted){
+                  await connection.stop().done();
+                }
+              } catch (e){
+                alert(e);
+              }
+            }}
+          >
+            <Text>Disconnect</Text>
+          </TouchableOpacity>
+        </View>                        
       </ScrollView>
       <View style={styles.tabBarInfoContainer}>
       <Text>Footer</Text>
