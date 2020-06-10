@@ -71,18 +71,16 @@ namespace ManaBurnServer
             services.AddSignalR(o => {
                 o.EnableDetailedErrors = true;
             })
-                // .AddStackExchangeRedis(o =>
-                // {
-                //     o.Configuration.AbortOnConnectFail = false;
-                //     o.Configuration.ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}";
-                //     o.Configuration.EndPoints.Add(
-                //         Configuration.GetSection("Atriarch_Redis_Host").Value, 
-                //         Configuration.GetSection("Atriarch_Redis_Port").Get<int>()
-                //         );
-                //     o.Configuration.Password = Configuration.GetSection("Atriarch_Redis_Pass").Value;
-                // })
-                ;
-
+            .AddStackExchangeRedis(o =>
+            {
+                o.Configuration.AbortOnConnectFail = false;
+                o.Configuration.ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}";
+                o.Configuration.EndPoints.Add(
+                    Configuration.GetSection("Atriarch_Redis_Host").Value, 
+                    Configuration.GetSection("Atriarch_Redis_Port").Get<int>()
+                    );
+                o.Configuration.Password = Configuration.GetSection("Atriarch_Redis_Pass").Value;
+            });
             services.AddHealthChecks();
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication("Manaburn", options =>
