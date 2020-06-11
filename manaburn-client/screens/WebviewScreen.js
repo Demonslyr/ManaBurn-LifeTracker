@@ -5,6 +5,7 @@ export default function WebviewScreen({navigation,route}) {
     const {url} = route.params;
     return(
         <WebView
+        allowsBackForwardNavigationGestures={true}
         source={{ uri: url }}
       />
     );

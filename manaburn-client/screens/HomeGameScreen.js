@@ -1,28 +1,34 @@
 import * as React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableWithoutFeedback, Keyboard, TouchableOpacity, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import {FontAwesome5} from '@expo/vector-icons';
+import ScryfallSearch from '../components/ScryfallSearch';
 
 export default function HomeGameScreen({navigation, route}) {
   return (
-    <View style={styles.container}>
-        <View style={{flex:1}}>
-          <Text>Top</Text>
-        </View>
-        <View style={{flex:2}}>
-          <TouchableOpacity style={{flexDirection: 'row'}}>
-            <FontAwesome5 name="user" size= {20} color='#4f5355'/>
-            <Text>Local Game</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection: 'row'}}>
-            <FontAwesome5 name="users" size= {20} color='#4f5355'/>
-            <Text>Network Game</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{flex:1}}>
-          <Text>Bottom</Text>
-        </View>
-    </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> 
+      <View style={styles.container}>
+          <View style={{flex:1}}>
+            <Text>Top</Text>
+          </View>
+          <View style={{flex:1}}>
+            <TouchableOpacity style={{flexDirection: 'row'}}>
+              <FontAwesome5 name="user" size= {20} color='#4f5355'/>
+              <Text>Local Game</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{flexDirection: 'row'}}>
+              <FontAwesome5 name="users" size= {20} color='#4f5355'/>
+              <Text>Network Game</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{flex:1, width:'100%'}}>
+            {ScryfallSearch(navigation.navigate)}
+          </View>
+          <View style={{flex:2}}>
+            <Text>Bottom</Text>
+          </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 // bg: #121313

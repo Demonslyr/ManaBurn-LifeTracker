@@ -13,7 +13,7 @@ const Tab = createBottomTabNavigator();
 export default function HomeTabNavigator() {
   return (
     <Tab.Navigator
-      initialRouteName="HomeScreen"
+      initialRouteName="GameStackNavigator"
       headerMode={Platform.OS === 'ios'?'float':'screen'}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
