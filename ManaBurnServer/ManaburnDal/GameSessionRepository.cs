@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ManaburnDal
+﻿namespace ManaburnDal
 {
-    class GameSessionRepository
+    public class GameSessionRepository
     {
+        // create gameSession
     }
 }

@@ -13,7 +13,7 @@ namespace ManaBurnServer.Extensions
         }
         public void Configure(Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenOptions options)
         {
-            
+
         }
     }
 }

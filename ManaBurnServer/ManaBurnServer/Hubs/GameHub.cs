@@ -5,7 +5,7 @@ namespace ManaBurnServer.Hubs
 {
     public class GameHub : Hub
     {
-        public async Task SendMessage(string user,string gameSession, string action)
+        public async Task SendMessage(string user, string gameSession, string action)
         {
             // Send message to clients in the session, do some checks to make sure the client belongs to the session they passed before sending
             await Clients.OthersInGroup(gameSession).SendAsync("ReceiveMessage", user, $"{user} performed {action}!");

@@ -1,28 +1,26 @@
+using Elastic.Apm.AspNetCore;
+using ManaBurnServer.Extensions;
 using ManaBurnServer.Hubs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Elasticsearch;
 using Serilog.Sinks.Elasticsearch;
-using StackExchange.Redis;
-using System;
-using System.Linq;
-using System.Net;
-using System.Text.Json;
-using Elastic.Apm.AspNetCore;
-using ManaBurnServer.Extensions;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
+using System.Linq;
+using System.Text.Json;
 
 namespace ManaBurnServer
 {
@@ -77,16 +75,17 @@ namespace ManaBurnServer
             services.AddSingleton<IConfigureOptions<SwaggerUIOptions>, ManaburnSwaggerUIOptions>();
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ManaburnSwaggerGenOptions>();
             services.AddSwaggerGen();
-            services.AddSignalR(o => {
+            services.AddSignalR(o =>
+            {
                 o.EnableDetailedErrors = true;
             })
             .AddStackExchangeRedis(o =>
             {
                 o.Configuration.AbortOnConnectFail = false;
                 o.Configuration.ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}";
-                o.Configuration.ChannelPrefix = "ManaburnServer";
+                o.Configuration.ChannelPrefix = "ManaburnServer-";
                 o.Configuration.EndPoints.Add(
-                    Configuration.GetSection("Atriarch_Redis_Host").Value, 
+                    Configuration.GetSection("Atriarch_Redis_Host").Value,
                     Configuration.GetSection("Atriarch_Redis_Port").Get<int>()
                     );
                 o.Configuration.Password = Configuration.GetSection("Atriarch_Redis_Pass").Value;
@@ -155,10 +154,10 @@ namespace ManaBurnServer
                         context.Response.ContentType = "application/json";
 
                         var result = JsonSerializer.Serialize(new
-                            {
-                                status = report.Status.ToString(),
-                                health = report.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() })
-                            },
+                        {
+                            status = report.Status.ToString(),
+                            health = report.Entries.Select(e => new { key = e.Key, value = e.Value.Status.ToString() })
+                        },
                             new JsonSerializerOptions { WriteIndented = true });
                         await context.Response.WriteAsync(result);
                     }
