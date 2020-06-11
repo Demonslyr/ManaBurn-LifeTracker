@@ -26,6 +26,9 @@ export default function SignalrTestPage() {
 
   return (
     <View style={styles.container}>
+      <View style={{alignItems:'center',justifyContent:'center'}}>
+        <Text>Header</Text>
+      </View>
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View>
           <TouchableOpacity
@@ -104,19 +107,10 @@ export default function SignalrTestPage() {
         </View>                        
       </ScrollView>
       <View style={styles.tabBarInfoContainer}>
-      <Text>Footer</Text>
+        <Text>Footer</Text>
       </View>
     </View>
   );
-}
-
-function onPress (connection){
-  alert("pressed");
-  //connectionnewConnection.invoke("AddToGroup", "TestSession");
-  // connection.start()
-  //   .then(() => connection.invoke("AddToGroup", "TestSession"))
-  //   .then(() => connection.invoke("SendMessage", "Tobes","TestSession","Hello"))
-  //   .then(() => connection.invoke("RemoveFromGroup", "TestSession")); 
 }
 
 SignalrTestPage.navigationOptions = {
