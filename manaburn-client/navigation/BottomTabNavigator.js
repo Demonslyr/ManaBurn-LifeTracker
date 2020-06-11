@@ -1,57 +1,39 @@
+import React from 'react';
+import { Platform} from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import * as React from 'react';
+import TabBarFontAwesome from '../components/TabBarFontAwesome';
 
-import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import SignalrTestPage from '../screens/SignalrTestPage';
-import LinksScreen from '../screens/LinksScreen';
+import AccountStack from './AccountNavigator';
 
-const BottomTab = createBottomTabNavigator();
-const INITIAL_ROUTE_NAME = 'Home';
+import GameStackNavigator from '../navigation/GameStackNavigator';
+import SignalrTestStackNavigator from '../navigation/SignalrTestStackNavigator';
 
-export default function BottomTabNavigator({ navigation, route }) {
-  // Set the header title on the parent stack navigator depending on the
-  // currently active tab. Learn more in the documentation:
-  // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+const Tab = createBottomTabNavigator();
 
+export default function HomeTabNavigator() {
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
-      <BottomTab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          title: 'Get Started',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-code-working" />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Links"
-        component={LinksScreen}
-        options={{
-          title: 'Resources',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
-        }}
-      />
-      <BottomTab.Screen
-        name="Signalr"
-        component={SignalrTestPage}
-        options={{
-          title: 'SignalrScreen',
-          tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name="md-book" />,
-        }}
-      />
-    </BottomTab.Navigator>
+    <Tab.Navigator
+      initialRouteName="HomeScreen"
+      headerMode={Platform.OS === 'ios'?'float':'screen'}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          if (route.name === 'GameStackNavigator') {
+            return <TabBarFontAwesome focused={focused} size={size} name={'home'}/>;
+          } else if (route.name === 'Account') {
+            return <TabBarFontAwesome focused={focused} size={size} name={'user'} />;
+          } else if (route.name === 'SignalrTestStackNavigator') {
+            return <TabBarFontAwesome focused={focused} size={size} name={'plug'} />;
+          }
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: 'darkgray',
+        inactiveTintColor: 'gray',
+      }}
+    >
+      <Tab.Screen name="SignalrTestStackNavigator" component={SignalrTestStackNavigator}/>
+      <Tab.Screen name="GameStackNavigator" component={GameStackNavigator}/>
+      <Tab.Screen name="Account" component={AccountStack} />
+    </Tab.Navigator>
   );
-}
-
-function getHeaderTitle(route) {
-  const routeName = route.state?.routes[route.state.index]?.name ?? INITIAL_ROUTE_NAME;
-
-  switch (routeName) {
-    case 'Home':
-      return 'How to get started';
-    case 'Links':
-      return 'Links to learn more';
-  }
 }

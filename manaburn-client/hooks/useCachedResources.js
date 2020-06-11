@@ -2,8 +2,9 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
+import {getCachedAuthAsync} from '../helpers/AppAuthHelpers'
 
-export default function useCachedResources(dispatch) {
+export default function useCachedResources(state,dispatch) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
 
   // Load any resources or data that we need prior to rendering the app

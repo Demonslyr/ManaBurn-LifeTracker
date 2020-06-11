@@ -2,10 +2,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
-
+import {getCachedAuthAsync, signInAsync, signOutAsync} from './helpers/AppAuthHelpers'
 import useCachedResources from './hooks/useCachedResources';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
-
+import HomeTabNavigator from './navigation/BottomTabNavigator';
+import AuthContext from './context/AuthContext'
+import FeedbackModalStack from './navigation/ModalNavigator';
+import SignInScreen from './screens/SignInScreen';
 const Stack = createStackNavigator();
 
 export default function App(props) {
@@ -62,7 +65,7 @@ export default function App(props) {
     }),
     []
   );
-  const isLoadingComplete = useCachedResources(dispatch);
+  const isLoadingComplete = useCachedResources(state, dispatch);
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return null;
@@ -76,7 +79,7 @@ export default function App(props) {
             <Stack.Navigator headerMode='none' initialRouteName='Home'>
               {!!state.authState ? (
                 <>
-                  <Stack.Screen name="Home" component={Home} />
+                  <Stack.Screen name="Home" component={HomeTabNavigator} />
                   <Stack.Screen name='FeedbackStack' component={FeedbackModalStack} />
                 </>
               ) : (
