@@ -10,6 +10,7 @@ export default function SignalrTestPage() {
       let newConnection = new SignalR.HubConnectionBuilder()
       .configureLogging(SignalR.LogLevel.Debug)
       .withUrl("http://manaburn.atriarch.systems/ManaBurn")
+      .withAutomaticReconnect(50)
       .build();
       newConnection.on("ReceiveMessage", (arg1, arg2) => {
         alert(`arg1: ${arg1}, arg2: ${arg2}`);
