@@ -82,7 +82,7 @@ namespace ManaBurnServer
             .AddStackExchangeRedis(o =>
             {
                 o.Configuration.AbortOnConnectFail = false;
-                o.Configuration.ClientName = $"{Environment.EnvironmentName}{Environment.ApplicationName}";
+                o.Configuration.ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}";
                 o.Configuration.ChannelPrefix = "ManaburnServer";
                 o.Configuration.EndPoints.Add(
                     Configuration.GetSection("Atriarch_Redis_Host").Value,
