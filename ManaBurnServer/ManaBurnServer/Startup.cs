@@ -83,7 +83,7 @@ namespace ManaBurnServer
             {
                 o.Configuration.AbortOnConnectFail = false;
                 o.Configuration.ClientName = $"{Environment.EnvironmentName}-{Environment.ApplicationName}";
-                o.Configuration.ChannelPrefix = "ManaburnServer-";
+                o.Configuration.ChannelPrefix = "ManaburnServer";
                 o.Configuration.EndPoints.Add(
                     Configuration.GetSection("Atriarch_Redis_Host").Value,
                     Configuration.GetSection("Atriarch_Redis_Port").Get<int>()
