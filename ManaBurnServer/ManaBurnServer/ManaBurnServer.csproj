@@ -30,5 +30,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ManaburnDal\ManaburnDal.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 
 </Project>

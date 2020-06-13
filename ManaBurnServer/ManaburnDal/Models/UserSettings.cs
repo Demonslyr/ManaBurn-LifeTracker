@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ManaburnDal.Models
+﻿namespace ManaburnDal.Models
 {
     public class UserSettings
     {
