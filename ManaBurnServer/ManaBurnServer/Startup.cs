@@ -145,11 +145,10 @@ namespace ManaBurnServer
                 app.UseHsts();
             }
             app.UseCors("CorsPolicy");
-            app.UseAuthorization();
             app.UseAuthentication();
             app.UseRouting();
-
-
+            app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
