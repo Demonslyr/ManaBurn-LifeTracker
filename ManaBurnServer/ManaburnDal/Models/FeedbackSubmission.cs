@@ -7,5 +7,8 @@ namespace ManaburnDal.Models
         [Required]
         [MaxLength(1000)]
         public string Message { get; set; }
+        [Required]
+        [MaxLength(250)]
+        public string Source { get; set; }
     }
 }

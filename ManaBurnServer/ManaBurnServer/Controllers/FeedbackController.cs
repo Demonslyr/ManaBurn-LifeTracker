@@ -25,9 +25,6 @@ namespace ManaBurnServer.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Needs to return a list of Product summaries
-        /// </summary>
         [HttpPost]
         public async Task<ActionResult> GetPageOfFeedback(FeedbackRequest feedbackRequest)
         {
