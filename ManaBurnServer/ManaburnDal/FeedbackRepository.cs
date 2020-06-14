@@ -19,15 +19,10 @@ namespace ManaburnDal
     {
         private const string SqlQueryTarget = "feedback";
         private readonly IDbConnection _connection;
-        private readonly ILogger _logger;
 
-        public FeedbackRepository(ILogger<FeedbackRepository> logger, IOptions<FeedbackRepositoryConfig> feedbackRepositoryConfig)
+        public FeedbackRepository(IDbConnection connection)
         {
-            logger.LogInformation($"CONNECTIONSTRING : {feedbackRepositoryConfig.Value.ConnectionString}");
-            _connection = new NpgsqlConnection(feedbackRepositoryConfig.Value.ConnectionString);
-            logger.LogInformation($"CONNECTION : {_connection.ConnectionString}");
-
-            _logger = logger;
+            _connection = connection;
         }
 
         public async Task<IEnumerable<Feedback>> SelectFeedbackRecordsByPage(int pageNumber, int pageSize)
@@ -39,7 +34,6 @@ namespace ManaburnDal
 
         public async Task<string> CreateFeedbackRecord(FeedbackSubmission feedback, string userId)
         {
-            _logger.LogInformation($"CONNECTIONSTRING : {_connection.ConnectionString}");
             var query = $"INSERT INTO {SqlQueryTarget} (id, message, source, createdby, createdutc, status) VALUES(@Id, @Message, @Source, @CreatedBy, @CreatedUtc, @Status) RETURNING id";
             _connection.Open();
             return await _connection.QuerySingleAsync<string>(query, new

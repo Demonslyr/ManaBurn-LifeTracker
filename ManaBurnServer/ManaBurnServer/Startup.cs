@@ -24,6 +24,7 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Text.Json;
+using Npgsql;
 
 namespace ManaBurnServer
 {
@@ -78,10 +79,10 @@ namespace ManaBurnServer
             services.AddSingleton<IConfigureOptions<SwaggerUIOptions>, ManaburnSwaggerUIOptions>();
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ManaburnSwaggerGenOptions>();
             services.AddSwaggerGen();
-
+            Log.Information($"CONNECITON : {Configuration.GetSection("Manaburn_Atriarch_PsqlConnection").Value}");
             services.Configure<FeedbackRepositoryConfig>(c => c.ConnectionString = Configuration.GetSection("Manaburn_Atriarch_PsqlConnection").Value );
 
-            services.AddScoped<FeedbackRepository>();
+            services.AddScoped<FeedbackRepository>(sp => new FeedbackRepository( new NpgsqlConnection(Configuration.GetSection("Manaburn_Atriarch_PsqlConnection").Value)));
 
             services.AddSignalR(o =>
             {
