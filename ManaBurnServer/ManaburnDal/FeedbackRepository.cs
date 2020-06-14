@@ -1,6 +1,10 @@
 ﻿using Dapper;
 using ManaburnDal.Enum;
 using ManaburnDal.Models;
+using ManaBurnServer.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;

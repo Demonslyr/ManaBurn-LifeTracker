@@ -2,6 +2,7 @@ using Elastic.Apm.AspNetCore;
 using ManaburnDal;
 using ManaBurnServer.Extensions;
 using ManaBurnServer.Hubs;
+using ManaBurnServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -13,7 +14,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Npgsql;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Elasticsearch;
@@ -24,6 +24,7 @@ using System;
 using System.Data;
 using System.Linq;
 using System.Text.Json;
+using Npgsql;
 
 namespace ManaBurnServer
 {
@@ -79,9 +80,9 @@ namespace ManaBurnServer
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ManaburnSwaggerGenOptions>();
             services.AddSwaggerGen();
 
-            services.AddTransient<IDbConnection>(sp => new NpgsqlConnection(Configuration.GetSection("Manaburn_Atriarch_PsqlConnection").Value));
-
-            services.AddScoped<FeedbackRepository>();
+            services.AddTransient<IDbConnection>(sp => 
+                new NpgsqlConnection(Configuration.GetSection("Atriarch_PsqlConnection").Value));
+            services.AddTransient<FeedbackRepository>();
 
             services.AddSignalR(o =>
             {
@@ -148,7 +149,7 @@ namespace ManaBurnServer
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
