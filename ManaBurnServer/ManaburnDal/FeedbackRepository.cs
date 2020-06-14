@@ -18,12 +18,15 @@ namespace ManaburnDal
     public class FeedbackRepository
     {
         private const string SqlQueryTarget = "feedback";
-        private IDbConnection _connection;
+        private readonly IDbConnection _connection;
         private readonly ILogger _logger;
 
         public FeedbackRepository(ILogger<FeedbackRepository> logger, IOptions<FeedbackRepositoryConfig> feedbackRepositoryConfig)
         {
+            logger.LogInformation($"CONNECTIONSTRING : {feedbackRepositoryConfig.Value.ConnectionString}");
             _connection = new NpgsqlConnection(feedbackRepositoryConfig.Value.ConnectionString);
+            logger.LogInformation($"CONNECTION : {_connection.ConnectionString}");
+
             _logger = logger;
         }
 
