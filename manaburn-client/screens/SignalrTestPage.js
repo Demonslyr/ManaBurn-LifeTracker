@@ -2,29 +2,83 @@ import * as React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as SignalR from '@microsoft/signalr';
+import * as _ from 'lodash';
+
+
+const initialPlayerState =     {
+  playerHealth: 40,//make this whatever the game default health is and set game defult health off of player settings in the backend
+  playerName: 'Tobrazoro'
+};
+
+function playerStateReducer (prevState, action) {
+  switch (action.type) {
+    case 'HEALTH_INC':
+      return {
+        ...prevState,
+        playerHealth: prevState.playerHealth+1,
+      };
+    case 'HEALTH_DEC':
+      return {
+        ...prevState,
+        playerHealth: prevState.playerHealth-1,
+
+      };
+      case 'NAME_CHANGE':
+      return {
+        ...prevState,
+        playerName: action.newPlayerName,
+      };
+    }
+  };
+
+  function pushStateCb (connection,playerState) {
+    try{
+      const jsonPlayerState = JSON.stringify(playerState);
+      connection.invoke("PublishState", "Tobes", playerState.playerName,jsonPlayerState);
+    } catch (e) {
+      alert(e)
+    }
+  };
 
 export default function SignalrTestPage() {
   const [connection, setConnection] = React.useState(null);
-  const CONNECT = React.useCallback(() => {
+  const [gameState, setGameState] = React.useState([]);
+  const [playerState, dispatchPlayerState] = React.useReducer(playerStateReducer, initialPlayerState);
+  const debouncedStatePush = React.useCallback(_.debounce((conenction,playerState) => pushStateCb(conenction,playerState), 2000),[]);
+
+  const CONNECT = React.useCallback(async () => {
     if (connection == null || connection.connectionState === 'Disconnected'){
       let newConnection = new SignalR.HubConnectionBuilder()
       .configureLogging(SignalR.LogLevel.Debug)
-      .withUrl("http://manaburn.atriarch.systems/ManaBurn")
+      .withUrl("https://manaburn.atriarch.systems/ManaBurn")
       .withAutomaticReconnect(50)
       .build();
-      newConnection.on("ReceiveMessage", (arg1, arg2) => {
+      await newConnection.start();
+      newConnection.on("ReceiveMessage", async (arg1, arg2) => {
         alert(`arg1: ${arg1}, arg2: ${arg2}`);
       });
-      //alert(Object.keys(newConnection).join(","));
+      newConnection.on("ReceiveState", async (state, player, messages) =>{
+        alert(`Received from ${player}\n${state}`);
+      });
+      newConnection.on("RequestState", async () =>{
+        alert(`Received requestForState`);
+        try{
+          if(!newConnection.connectionStarted){
+            await connection.start();
+          }
+            const jsonPlayerState = JSON.stringify(playerState);
+            await connection.invoke("PublishState", "Tobes",jsonPlayerState);
+          } catch (e) {
+            alert(e)
+          }
+      },[newConnection,playerState]);
       alert(`Conn St: ${newConnection.connectionState},\nConn Strt: ${newConnection.connectionStarted}`);
       setConnection(newConnection);
     } else {
-      //alert(`Conn St: ${connection.connectionState},\nConn Strt: ${connection.connectionStarted}`);
-      alert(Object.keys(connection).join(","));
+      alert(`Conn St: ${connection.connectionState},\nConn Strt: ${connection.connectionStarted}`);
     }
   },
-  [connection, setConnection]);
-
+  [connection, setConnection,playerState]);
   return (
     <View style={styles.container}>
       <View style={{alignItems:'center',justifyContent:'center'}}>
@@ -74,6 +128,32 @@ export default function SignalrTestPage() {
           </TouchableOpacity>
         </View>
         <View>
+          <Text>Name: {playerState.playerName}</Text>
+          <Text>Life: {playerState.playerHealth}</Text>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={async () => {
+              dispatchPlayerState({type: 'HEALTH_INC'});
+              debouncedStatePush(connection,playerState);
+            }}
+          >
+            <Text>Life +</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={async () => {
+              dispatchPlayerState({type: 'HEALTH_DEC'});
+              debouncedStatePush(connection,playerState);
+            }}
+          >
+            <Text>Life -</Text>
+          </TouchableOpacity>
+        </View>                
+        <View>
           <TouchableOpacity
             style={styles.button}
             onPress={async () => {
@@ -96,7 +176,7 @@ export default function SignalrTestPage() {
             onPress={async () => {
               try{
                 if(connection.connectionStarted){
-                  await connection.stop().done();
+                  await connection.stop().done(alert('disconnected'));
                 }
               } catch (e){
                 alert(e);
