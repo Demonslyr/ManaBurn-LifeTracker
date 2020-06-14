@@ -80,9 +80,9 @@ namespace ManaBurnServer
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ManaburnSwaggerGenOptions>();
             services.AddSwaggerGen();
 
-            services.AddScoped(sp => 
+            services.AddTransient<IDbConnection>(sp => 
                 new NpgsqlConnection(Configuration.GetSection("Atriarch_PsqlConnection").Value));
-            services.AddScoped<FeedbackRepository>();
+            services.AddTransient<FeedbackRepository>();
 
             services.AddSignalR(o =>
             {
