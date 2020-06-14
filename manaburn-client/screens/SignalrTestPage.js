@@ -44,7 +44,7 @@ export default function SignalrTestPage() {
   const [connection, setConnection] = React.useState(null);
   const [gameState, setGameState] = React.useState([]);
   const [playerState, dispatchPlayerState] = React.useReducer(playerStateReducer, initialPlayerState);
-  const debouncedStatePush = React.useCallback(_.debounce((conenction,playerState) => pushStateCb(conenction,playerState), 2000),[]);
+  const debouncedStatePush = React.useCallback(_.debounce((conenction,playerState) => pushStateCb(conenction,playerState), 700),[]);
 
   const CONNECT = React.useCallback(async () => {
     if (connection == null || connection.connectionState === 'Disconnected'){
@@ -87,16 +87,16 @@ export default function SignalrTestPage() {
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <View>
           <TouchableOpacity
-            style={styles.button}
+            style={(connection && connection.connectionState === 'Connected') ? styles.disabledButton : styles.button}
             onPress={CONNECT}
-            disabled={connection.connectionState === 'Connected'}
+            disabled={connection && connection.connectionState === 'Connected'}
           >
             <Text>Connect</Text>
           </TouchableOpacity>
         </View>
         <View>
           <TouchableOpacity
-            style={styles.button}
+            style={(connection == null || !connection.connectionStarted) ? styles.disabledButton : styles.button}
             onPress={async () => {
               try{
                 if(!connection.connectionStarted){
@@ -107,14 +107,14 @@ export default function SignalrTestPage() {
                   alert(e)
                 }
             }}
-            disabled={connection.connectionState === 'Disonnected'}
+            disabled={connection == null || !connection.connectionStarted}
           >
             <Text>Add Group</Text>
           </TouchableOpacity>
         </View>
         <View>
           <TouchableOpacity
-            style={styles.button}
+            style={(connection == null || !connection.connectionStarted) ? styles.disabledButton : styles.button}
             onPress={async () => {
               try{
                 if(!connection.connectionStarted){
@@ -125,7 +125,7 @@ export default function SignalrTestPage() {
                   alert(e)
                 }
             }}
-            disabled={connection.connectionState === 'Disonnected'}
+            disabled={connection == null || !connection.connectionStarted}
           >
             <Text>Send Message</Text>
           </TouchableOpacity>
@@ -136,31 +136,45 @@ export default function SignalrTestPage() {
         </View>
         <View>
           <TouchableOpacity
-            style={styles.button}
+            style={(connection == null || !connection.connectionStarted) ? styles.disabledButton : styles.button}
             onPress={async () => {
-              dispatchPlayerState({type: 'HEALTH_INC'});
-              debouncedStatePush(connection,playerState);
+              try{
+                if(!connection.connectionStarted){
+                  await connection.start();
+                }
+                dispatchPlayerState({type: 'HEALTH_INC'});
+                debouncedStatePush(connection,playerState);
+              } catch (e) {
+                alert(e)
+              }
             }}
-            disabled={connection.connectionState === 'Disonnected'}
+            disabled={connection == null || !connection.connectionStarted}
           >
             <Text>Life +</Text>
           </TouchableOpacity>
         </View>
         <View>
           <TouchableOpacity
-            style={styles.button}
+            style={(connection == null || !connection.connectionStarted) ? styles.disabledButton : styles.button}
             onPress={async () => {
-              dispatchPlayerState({type: 'HEALTH_DEC'});
-              debouncedStatePush(connection,playerState);
+              try{
+                if(!connection.connectionStarted){
+                  await connection.start();
+                }
+                dispatchPlayerState({type: 'HEALTH_DEC'});
+                debouncedStatePush(connection,playerState);
+              } catch (e) {
+                alert(e)
+              }
             }}
-            disabled={connection.connectionState === 'Disonnected'}
+            disabled={connection == null || !connection.connectionStarted}
           >
             <Text>Life -</Text>
           </TouchableOpacity>
         </View>                
         <View>
           <TouchableOpacity
-            style={styles.button}
+            style={(connection == null || !connection.connectionStarted) ? styles.disabledButton : styles.button}
             onPress={async () => {
               try{
                 if(!connection.connectionStarted){
@@ -171,14 +185,14 @@ export default function SignalrTestPage() {
                   alert(e)
                 }
             }}
-            disabled={connection.connectionState === 'Disonnected'}
+            disabled={connection == null || !connection.connectionStarted}
           >
             <Text>Remove Group</Text>
           </TouchableOpacity>
         </View>  
         <View>
           <TouchableOpacity
-            style={styles.button}
+            style={(connection == null || !connection.connectionStarted) ? styles.disabledButton : styles.button}
             onPress={async () => {
               try{
                 if(connection.connectionStarted){
@@ -188,7 +202,7 @@ export default function SignalrTestPage() {
                 alert(e);
               }
             }}
-            disabled={connection.connectionState === 'Disonnected'}
+            disabled={connection == null || !connection.connectionStarted}
           >
             <Text>Disconnect</Text>
           </TouchableOpacity>
@@ -213,6 +227,11 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     backgroundColor: "#DDDDDD",
+    padding: 10
+  },
+  disabledButton: {
+    alignItems: "center",
+    backgroundColor: "red",
     padding: 10
   },
   developmentModeText: {
