@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using ManaBurnServer.Swagger.DocumentFilters;
+﻿using ManaBurnServer.Swagger.DocumentFilters;
 using ManaBurnServer.Swagger.OperationFilters;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace ManaBurnServer.Extensions
 {
@@ -23,7 +21,7 @@ namespace ManaBurnServer.Extensions
         }
         public void Configure(SwaggerGenOptions options)
         {
-        // Set the comments path for the Swagger JSON and UI.
+            // Set the comments path for the Swagger JSON and UI.
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             options.IncludeXmlComments(xmlPath);

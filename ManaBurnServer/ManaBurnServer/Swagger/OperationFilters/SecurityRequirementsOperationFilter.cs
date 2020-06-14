@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ManaBurnServer.Swagger.OperationFilters
 {
@@ -18,7 +17,11 @@ namespace ManaBurnServer.Swagger.OperationFilters
                 .Select(attr => attr.Policy)
                 .Distinct();
 
-            if (!requiredScopes.Any()) return;
+            if (!requiredScopes.Any())
+            {
+                return;
+            }
+
             operation.Responses.Add("401", new OpenApiResponse { Description = "Unauthorized" });
             operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
 

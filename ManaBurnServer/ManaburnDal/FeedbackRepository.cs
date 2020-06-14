@@ -1,11 +1,13 @@
 ﻿using Dapper;
 using ManaburnDal.Enum;
 using ManaburnDal.Models;
+using ManaBurnServer.Models;
+using Microsoft.Extensions.Logging;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace ManaburnDal
 {
@@ -18,11 +20,10 @@ namespace ManaburnDal
         private readonly IDbConnection _connection;
         private readonly ILogger _logger;
 
-        public FeedbackRepository(ILogger<FeedbackRepository> logger,IDbConnection connection)
+        public FeedbackRepository(ILogger<FeedbackRepository> logger, FeedbackRepositoryConfig feedbackRepositoryConfig)
         {
-            _connection = connection;
+            _connection = new NpgsqlConnection(feedbackRepositoryConfig.ConnectionString);
             _logger = logger;
-            _logger.LogInformation(connection.ConnectionString);
         }
 
         public async Task<IEnumerable<Feedback>> SelectFeedbackRecordsByPage(int pageNumber, int pageSize)
