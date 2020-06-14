@@ -13,13 +13,16 @@ namespace ManaBurnServer.Hubs
         public async Task AddToGroup(string gameSession)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, gameSession);
-
             await Clients.OthersInGroup(gameSession).SendAsync("ReceiveMessage", $"{Context.ConnectionId} has joined the group {gameSession}.");
-            
             await Clients.Caller.SendAsync("ReceiveMessage", $"You have joined the group {gameSession}.");
-
+            await Clients.OthersInGroup(gameSession).SendAsync("RequestState", $"Please send your state.");
         }
 
+        public async Task PublishState(string user, string gameSession, string jsonPlayerState)
+        {
+            await Clients.OthersInGroup(gameSession).SendAsync("ReceiveState", $"{Context.ConnectionId} has sent state to {gameSession}.", jsonPlayerState);
+            await Clients.Caller.SendAsync("ReceiveMessage", $"You sent state.");
+        }
         public async Task RemoveFromGroup(string gameSession)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameSession);
