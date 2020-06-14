@@ -89,6 +89,7 @@ export default function SignalrTestPage() {
           <TouchableOpacity
             style={styles.button}
             onPress={CONNECT}
+            disabled={connection.connectionState === 'Connected'}
           >
             <Text>Connect</Text>
           </TouchableOpacity>
@@ -106,6 +107,7 @@ export default function SignalrTestPage() {
                   alert(e)
                 }
             }}
+            disabled={connection.connectionState === 'Disonnected'}
           >
             <Text>Add Group</Text>
           </TouchableOpacity>
@@ -123,6 +125,7 @@ export default function SignalrTestPage() {
                   alert(e)
                 }
             }}
+            disabled={connection.connectionState === 'Disonnected'}
           >
             <Text>Send Message</Text>
           </TouchableOpacity>
@@ -138,6 +141,7 @@ export default function SignalrTestPage() {
               dispatchPlayerState({type: 'HEALTH_INC'});
               debouncedStatePush(connection,playerState);
             }}
+            disabled={connection.connectionState === 'Disonnected'}
           >
             <Text>Life +</Text>
           </TouchableOpacity>
@@ -149,6 +153,7 @@ export default function SignalrTestPage() {
               dispatchPlayerState({type: 'HEALTH_DEC'});
               debouncedStatePush(connection,playerState);
             }}
+            disabled={connection.connectionState === 'Disonnected'}
           >
             <Text>Life -</Text>
           </TouchableOpacity>
@@ -166,6 +171,7 @@ export default function SignalrTestPage() {
                   alert(e)
                 }
             }}
+            disabled={connection.connectionState === 'Disonnected'}
           >
             <Text>Remove Group</Text>
           </TouchableOpacity>
@@ -182,6 +188,7 @@ export default function SignalrTestPage() {
                 alert(e);
               }
             }}
+            disabled={connection.connectionState === 'Disonnected'}
           >
             <Text>Disconnect</Text>
           </TouchableOpacity>

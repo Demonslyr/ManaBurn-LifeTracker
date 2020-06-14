@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 export default function GameStackNavigator (){
   return (
     <Stack.Navigator initialRouteName="GameHome">
-        <Stack.Screen name="GameHome" component={HomeGameScreen} options={({ navigation }) =>({ headerTitle: 'Start Game', headerRight: () => FeedbackIcon(navigation,"Account")})}/>
+        <Stack.Screen name="GameHome" component={HomeGameScreen} options={({ navigation }) =>({ headerTitle: 'Start Game', headerRight: () => FeedbackIcon(navigation,"GameHome")})}/>
         <Stack.Screen name="ScryfallScreen" component={WebviewScreen} options={({ navigation }) =>({ headerTitle: 'Search for a card', headerRight: () => FeedbackIcon(navigation,"ScryfallScreen")})}/>
     </Stack.Navigator>
   );

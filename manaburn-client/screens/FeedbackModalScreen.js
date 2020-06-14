@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, TextInput, View, Text, Button} from 'react-native';
+import { TouchableWithoutFeedback, KeyboardAvoidingView, TouchableOpacity, StyleSheet, Keyboard, TextInput, View, Text, Button} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import * as FeedbackApi from '../api/feedbackApi';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,7 +27,7 @@ export default function ModalScreen({ navigation, route }) {
             <MaterialIcons name="feedback" size={80} color='olive' style={[{paddingBottom:45, paddingLeft: 10}]} />
             <Text style={{ fontSize: 30 }}>{`Provide Feedback`}</Text>
           </View>
-          <View style={{flex:0.2}}>
+          <View style={{flex:0.2, paddingLeft:'5%', paddingRight:'5%'}}>
             <Text style={{ fontSize: 18, textAlign: 'center'}}>{`This will be a place to provide feedback on variaous features. Unfortunately it's text only for right now.`}</Text>
             <Text style={{ fontSize: 18 }}>{`Source: ${source}`}</Text>
           </View>
@@ -44,12 +44,37 @@ export default function ModalScreen({ navigation, route }) {
                 />
             <Text>{`${FEEDBACK_MAX_LENGTH-feedback.length} characters remaining`}</Text>
           </View>
-          <View style={{flex:0.1,flexDirection: 'row', alignItems:'center', justifyContent:'flex-end', paddingRight:'5%'}}>
-            <Button style={{minHeight:'10%'}} onPress={onSubmit} title="Submit" />
-            <Button style={{minHeight:'10%'}} onPress={() => navigation.goBack()} title="Done" />
+          <View style={{flex:0.1, flexDirection: 'row', alignItems:'center', justifyContent:'space-between', paddingRight:'5%', paddingLeft:'5%'}}>
+              <TouchableOpacity onPress={onSubmit} style={[{minHeight:'90%', flex:0.5, alignSelf:'flex-start'},styles.submitButton]} disabled={feedback.length<1}>
+                <Text style={styles.buttonText}>Submit</Text>
+              </TouchableOpacity>              
+              <TouchableOpacity onPress={() => navigation.goBack()} style={[{minHeight:'90%', flex:0.5, alignSelf:'flex-end'},styles.backButton]}>
+                <Text style={styles.buttonText}>Go Back</Text>
+              </TouchableOpacity>
           </View>
         </SafeAreaView>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
+
+const styles = StyleSheet.create({
+  submitButton: {
+    maxWidth: '40%',
+    backgroundColor: '#5cb85c',
+    //padding: 20,
+    borderRadius: 5,
+  },
+  backButton: {
+    maxWidth: '40%',
+    backgroundColor: '#05a5d1',
+    //padding: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    padding:10,
+    alignSelf:'center',
+    fontSize: 20,
+    color: '#ecf0f1',
+  }
+});

@@ -1,4 +1,5 @@
-import {getCachedAuthAsync,signInAsync} from '../components/AppAuthHelpers'
+import {getCachedAuthAsync,signInAsync} from '../helpers/AppAuthHelpers'
+import {Clipboard} from 'react-native';
 
 export async function SubmitFeedback({source, message}) {
   try {
@@ -7,7 +8,7 @@ export async function SubmitFeedback({source, message}) {
     if(authState == null){
         authState = await signInAsync();
     }
-    const response = await fetch(`https://dev.drinkpoint.me/api/Feedback/PutFeedback`, {
+    const response = await fetch(`https://manaburn.atriarch.systems/api/Feedback/PutFeedback`, {
         method: 'PUT',
         headers: {
             Accept: 'application/json',

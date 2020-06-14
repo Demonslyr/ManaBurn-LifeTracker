@@ -6,7 +6,7 @@ const Stack = createStackNavigator();
 
 export default function FeedbackModalStack (){
   return (
-    <Stack.Navigator initialRouteName="FeedbackModal" header mode='modal'>
+    <Stack.Navigator initialRouteName="FeedbackModal" mode='modal' screenOptions={{headerShown: false }}>
       <Stack.Screen name="FeedbackModal" component={ModalScreen}/>
     </Stack.Navigator>
   );
