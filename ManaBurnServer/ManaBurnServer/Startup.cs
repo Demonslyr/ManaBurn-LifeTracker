@@ -79,7 +79,7 @@ namespace ManaBurnServer
             services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ManaburnSwaggerGenOptions>();
             services.AddSwaggerGen();
 
-            services.AddSingleton(new FeedbackRepositoryConfig { ConnectionString = Configuration.GetSection("Manaburn_Atriarch_PsqlConnection").Value });
+            services.Configure<FeedbackRepositoryConfig>(c => c.ConnectionString = Configuration.GetSection("Manaburn_Atriarch_PsqlConnection").Value );
 
             services.AddScoped<FeedbackRepository>();
 
