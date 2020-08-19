@@ -5,7 +5,8 @@ stages:
       dockerfilePath: ./ManaBurnServer/ManaBurnServer/Dockerfile
       buildContext: ./ManaBurnServer
       tag: atriarch-manaburn-server:v1.0.${CICD_EXECUTION_SEQUENCE}
-      registry: 127.0.0.1:34443
+      pushRemote: true
+      registry: docker.atriarch.systems
 - name: Deploy
   steps:
   - applyYamlConfig:
