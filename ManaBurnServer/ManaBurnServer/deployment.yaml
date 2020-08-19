@@ -124,7 +124,7 @@ spec:
         configMap:
           name: manaburn-config
       imagePullSecrets:
-      - name: atriarch-systems-docker
+      - name: atriarch-systems-docker-group
 ---
 apiVersion: v1
 kind: Service
