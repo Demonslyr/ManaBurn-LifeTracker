@@ -145,7 +145,7 @@ metadata:
   name: manaburn-server-ingress
   namespace: manaburn # The namespace the app will use  
   annotations:
-    kubernetes.io/ingress.class: traefik
+    kubernetes.io/ingress.class: nginx
 spec:
   rules:
   - host: manaburn.atriarch.systems
