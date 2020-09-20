@@ -3,7 +3,7 @@ import {AsyncStorage} from 'react-native';
 
 let config = {
     issuer: 'https://auth.drinkpoint.me',
-    scopes: ['ManaburnServer_0001','offline_access', 'openid', 'profile','email'],
+    scopes: ['ManaburnServer_0001','offline_access'],
     clientId: 'ManaburnMobileLogin-384cd523445548a986d3519f12430e2a',
 };
 
