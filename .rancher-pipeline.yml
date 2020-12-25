@@ -11,10 +11,12 @@ stages:
   steps:
   - applyYamlConfig:
       path: ./ManaBurnServer/ManaBurnServer/deployment.yaml
+    when:
+      branch:
+        include:
+        - master
 timeout: 60
-branch:
-  include:
-  - master
+branch: {}
 notification:
   recipients:
   - recipient: pipelineNotifications@mail.atriarch.systems
