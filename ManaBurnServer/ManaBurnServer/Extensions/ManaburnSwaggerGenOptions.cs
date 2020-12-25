@@ -29,16 +29,15 @@ namespace ManaBurnServer.Extensions
             options.SwaggerDoc("v1", new OpenApiInfo { Title = $"{_environment.EnvironmentName}-{_environment.ApplicationName}, Location: ${Environment.MachineName}", Version = "v1", Description = $"Ingest API for DrinkPoint data sources.", Contact = new OpenApiContact { Name = "Atriarch Systems" } });
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                In = ParameterLocation.Header,
-                Description = "Please enter JWT with Bearer into field",
                 Name = "Authorization",
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
                 BearerFormat = "JWT",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme."
             });
             options.DocumentFilter<HealthCheckFilter>();
             options.OperationFilter<SecurityRequirementsOperationFilter>();
-
         }
     }
 }

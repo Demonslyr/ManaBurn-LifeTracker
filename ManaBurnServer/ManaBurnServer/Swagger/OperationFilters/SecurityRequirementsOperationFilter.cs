@@ -25,17 +25,23 @@ namespace ManaBurnServer.Swagger.OperationFilters
             operation.Responses.Add("401", new OpenApiResponse { Description = "Unauthorized" });
             operation.Responses.Add("403", new OpenApiResponse { Description = "Forbidden" });
 
-            var oAuthScheme = new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
-            };
-            var bearerScheme = new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "bearer" }
-            };
             operation.Security = new List<OpenApiSecurityRequirement>
             {
-                new OpenApiSecurityRequirement{ {bearerScheme,new List<string>()} }
+                new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
+
+                    }
+                }
             };
         }
     }
