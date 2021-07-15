@@ -7,11 +7,9 @@ stages:
       tag: atriarch-manaburn-server:v1.0.${CICD_EXECUTION_SEQUENCE}
       pushRemote: true
       registry: docker.atriarch.systems
-- name: Deploy
-  steps:
-  - applyYamlConfig:
-      path: ./ManaBurnServer/ManaBurnServer/deployment.yaml
-timeout: 60
+    env:
+      PLUGIN_MTU: "1400"
+timeout: 15
 notification:
   recipients:
   - recipient: dan@mail.atriarch.systems
