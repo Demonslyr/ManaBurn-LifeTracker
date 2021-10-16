@@ -9,8 +9,6 @@ stages:
       registry: docker.atriarch.systems
     env:
       PLUGIN_MTU: "1400"
-      PLUGIN_DEBUG: "true"
-      PLUGIN_INSECURE: "true"
 timeout: 15
 notification:
   recipients:
