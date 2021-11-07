@@ -16,6 +16,18 @@
 # Mono auto generated files
 mono_crash.*
 
+138 lines (112 sloc)  2.34 KB
+   
+# Expo
+.expo
+__generated__
+web-build
+
+# Expo
+manaburn-client/.expo
+manaburn-client/__generated__
+manaburn-client/web-build
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

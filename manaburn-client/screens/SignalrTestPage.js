@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Buffer } from "buffer"
+import 'react-native-get-random-values'; // This polyfill needs to be above uuid
+import { uuid } from 'uuidv4';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as SignalR from '@microsoft/signalr';
 import * as _ from 'lodash';
@@ -7,7 +10,13 @@ import * as _ from 'lodash';
 
 const initialPlayerState =     {
   playerHealth: 40,//make this whatever the game default health is and set game defult health off of player settings in the backend
-  playerName: 'Tobrazoro'
+  playerName: 'Tobrazoro',
+  playerId: null,
+  PlayerCommanderDamage: [],
+  Emblems: [],
+  Counters: [],
+  Triggers: [],
+  IsTurn: false
 };
 
 function playerStateReducer (prevState, action) {
@@ -34,15 +43,35 @@ function playerStateReducer (prevState, action) {
   function pushStateCb (connection,playerState) {
     try{
       const jsonPlayerState = JSON.stringify(playerState);
-      connection.invoke("PublishState", "Tobes", playerState.playerName,jsonPlayerState);
+      connection.invoke(signalrAcitons.Publish_State, "Tobes", playerState.playerName,jsonPlayerState);
     } catch (e) {
       alert(e)
     }
   };
 
+  function getShortUuid() {
+    const hexId = uuid().replace(/-/g, "");
+    
+    return Buffer.from(hexId, 'hex').toString('base64')
+}
+
+const signalrEvents = {
+  Recieve_Message: "ReceiveMessage",
+  Recieve_State: "ReceiveState",
+  Request_State: "RequestState"  
+}
+
+const signalrAcitons = {
+  Send_Message: "SendMessage",
+  Add_To_Group: "AddToGroup",
+  Remove_From_Group: "RemoveFromGroup",
+  Publish_State: "PublishState"
+}
+
 export default function SignalrTestPage() {
   const [connection, setConnection] = React.useState(null);
   const [gameState, setGameState] = React.useState([]);
+  const [groupId, setGroupId] = React.useState(getShortUuid());
   const [playerState, dispatchPlayerState] = React.useReducer(playerStateReducer, initialPlayerState);
   const debouncedStatePush = React.useCallback(_.debounce((conenction,playerState) => pushStateCb(conenction,playerState), 700),[]);
 
@@ -67,7 +96,7 @@ export default function SignalrTestPage() {
             await connection.start();
           }
             const jsonPlayerState = JSON.stringify(playerState);
-            await connection.invoke("PublishState", "Tobes",jsonPlayerState);
+            await connection.invoke(signalrAcitons.Publish_State, "Tobes",jsonPlayerState);
           } catch (e) {
             alert(e)
           }
@@ -102,7 +131,7 @@ export default function SignalrTestPage() {
                 if(!connection.connectionStarted){
                   await connection.start();
                 }
-                  await connection.invoke("AddToGroup", "TestSession");
+                  await connection.invoke(signalrAcitons.Add_To_Group, groupId);
                 } catch (e) {
                   alert(e)
                 }
@@ -120,7 +149,7 @@ export default function SignalrTestPage() {
                 if(!connection.connectionStarted){
                   await connection.start();
                 }
-                  await connection.invoke("SendMessage", "Tobes","TestSession","Hello");
+                  await connection.invoke(signalrAcitons.Send_Message, "Tobes",groupId,"Hello");
                 } catch (e) {
                   alert(e)
                 }
@@ -180,7 +209,7 @@ export default function SignalrTestPage() {
                 if(!connection.connectionStarted){
                   await connection.start();
                 }
-                await connection.invoke("RemoveFromGroup", "TestSession");
+                await connection.invoke(signalrAcitons.Remove_From_Group, groupId);
                 } catch (e) {
                   alert(e)
                 }

@@ -1,10 +1,10 @@
 {
-  "devToolsPort": 19002,
-  "expoServerPort": 19000,
-  "packagerPort": 19001,
-  "packagerPid": 85512,
   "expoServerNgrokUrl": "https://bc-qbi.demonslyr.manaburn-client.exp.direct",
   "packagerNgrokUrl": "https://packager.bc-qbi.demonslyr.manaburn-client.exp.direct",
-  "ngrokPid": 26172,
-  "webpackServerPort": null
+  "ngrokPid": 40744,
+  "expoServerPort": 19000,
+  "packagerPort": 19000,
+  "packagerPid": null,
+  "webpackServerPort": null,
+  "devToolsPort": 19002
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
+using System.Text.Json;
+using ManaBurnServer.Models;
 
 namespace ManaBurnServer.Hubs
 {
@@ -17,10 +19,10 @@ namespace ManaBurnServer.Hubs
             await Clients.Caller.SendAsync("ReceiveMessage", $"You have joined the group {gameSession}.");
             await Clients.OthersInGroup(gameSession).SendAsync("RequestState", $"Please send your state.");
         }
-
         public async Task PublishState(string user, string gameSession, string jsonPlayerState)
         {
-            await Clients.OthersInGroup(gameSession).SendAsync("ReceiveState", $"{Context.ConnectionId} has sent state to {gameSession}.", jsonPlayerState);
+            var state = JsonSerializer.Deserialize<PlayerState>(jsonPlayerState); // Deserialization for security since we're sending client provided data to other clients.
+            await Clients.OthersInGroup(gameSession).SendAsync("ReceiveState", $"{Context.ConnectionId} has sent state to {gameSession}.", JsonSerializer.Serialize(state));
             await Clients.Caller.SendAsync("ReceiveMessage", $"You sent state.");
         }
         public async Task RemoveFromGroup(string gameSession)
