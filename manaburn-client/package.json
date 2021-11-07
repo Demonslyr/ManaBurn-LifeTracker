@@ -31,7 +31,7 @@
     "expo-status-bar": "~1.0.4",
     "expo-web-browser": "~9.2.0",
     "jwt-decode": "^3.1.2",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "md5": "^2.3.0",
     "nanoid": "^3.1.30",
     "react": "16.13.1",
