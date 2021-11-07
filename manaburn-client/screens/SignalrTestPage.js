@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Buffer } from "buffer"
 import 'react-native-get-random-values'; // This polyfill needs to be above uuid
-import { uuid } from 'uuidv4';
+import { nanoid } from 'nanoid'
 import { ScrollView } from 'react-native-gesture-handler';
 import * as SignalR from '@microsoft/signalr';
 import * as _ from 'lodash';
@@ -49,12 +48,6 @@ function playerStateReducer (prevState, action) {
     }
   };
 
-  function getShortUuid() {
-    const hexId = uuid().replace(/-/g, "");
-    
-    return Buffer.from(hexId, 'hex').toString('base64')
-}
-
 const signalrEvents = {
   Recieve_Message: "ReceiveMessage",
   Recieve_State: "ReceiveState",
@@ -71,7 +64,7 @@ const signalrAcitons = {
 export default function SignalrTestPage() {
   const [connection, setConnection] = React.useState(null);
   const [gameState, setGameState] = React.useState([]);
-  const [groupId, setGroupId] = React.useState(getShortUuid());
+  const [groupId, setGroupId] = React.useState(nanoid(12));
   const [playerState, dispatchPlayerState] = React.useReducer(playerStateReducer, initialPlayerState);
   const debouncedStatePush = React.useCallback(_.debounce((conenction,playerState) => pushStateCb(conenction,playerState), 700),[]);
 
