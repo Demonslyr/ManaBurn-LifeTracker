@@ -76,13 +76,13 @@ export default function SignalrTestPage() {
       .withAutomaticReconnect(50)
       .build();
       await newConnection.start();
-      newConnection.on("ReceiveMessage", async (arg1, arg2) => {
+      newConnection.on(signalrEvents.Recieve_Message, async (arg1, arg2) => {
         alert(`arg1: ${arg1}, arg2: ${arg2}`);
       });
-      newConnection.on("ReceiveState", async (state, player, messages) =>{
+      newConnection.on(signalrEvents.Recieve_State, async (state, player, messages) =>{
         alert(`Received from ${player}\n${state}`);
       });
-      newConnection.on("RequestState", async () =>{
+      newConnection.on(signalrEvents.Request_State, async () =>{
         alert(`Received requestForState`);
         try{
           if(!newConnection.connectionStarted){
