@@ -9,7 +9,7 @@ FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
 COPY ["ManaBurnServer/ManaBurnServer/ManaBurnServer.csproj", "ManaBurnServer/"]
 RUN dotnet restore "ManaBurnServer/ManaBurnServer.csproj"
-COPY .ManaBurnServer/ .
+COPY ./ManaBurnServer .
 WORKDIR "/src/ManaBurnServer"
 RUN dotnet build "ManaBurnServer.csproj" -c Release -o /app/build
 
